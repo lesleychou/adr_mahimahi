@@ -3,9 +3,9 @@ set -e
 
 VIDEO_SIZE_DIR=pensieve/data/video_sizes
 # ACTOR_PATH=${ROOT}/results/7_dims_rand_large_range_correct_rebuf_penalty/even_udr_1_rand_interval/actor_ep_50000.pth
-ACTOR_PATH=/tank/zxxia/active-domainrand/pensieve_results/7_dims_rand/even_udr_1_rand_interval/actor_ep_50000.pth
+ACTOR_PATH=pensieve/data/model_example/actor_ep_600.pth
 UP_LINK_SPEED_FILE=pensieve/data/12mbps
-TRACE_DIR=pensieve/data/synthetic_traces/test_7_dim_rand_in_dist_mahimahi
+TRACE_DIR=pensieve/data/traces
 CONFIG_FILE=pensieve/config/emulation/param_sweep.json
 
 # The architecture of emulation experiment.
