@@ -38,10 +38,10 @@ for buf_th in $(jq -r -c '.buffer_threshold.values[]' ${CONFIG_FILE}); do
                 for trace_file in ${trace_files} ; do
 
                     # echo "${buffer_threshold} ${delay} ${up_pkt_loss} ${down_pkt_loss} ${TRACE_FILE}"
-                    mm-delay ${delay} mm-loss uplink ${up_pkt_loss} mm-loss downlink ${down_pkt_loss} \
-                        mm-link ${UP_LINK_SPEED_FILE} ${TRACE_DIR}/${trace_file} -- \
+#                    mm-delay ${delay} mm-loss uplink ${up_pkt_loss} mm-loss downlink ${down_pkt_loss} \
+ #                       mm-link ${UP_LINK_SPEED_FILE} ${TRACE_DIR}/${trace_file} -- \
                         bash -c "python -m pensieve.virtual_browser.virtual_browser \
-                                        --ip \${MAHIMAHI_BASE} \
+                                        --ip=localhost \
                                         --port 8000 \
                                         --abr RL \
                                         --video-size-file-dir ${VIDEO_SIZE_DIR} \
@@ -49,15 +49,15 @@ for buf_th in $(jq -r -c '.buffer_threshold.values[]' ${CONFIG_FILE}); do
                                         --trace-file ${trace_file} \
                                         --actor-path ${ACTOR_PATH}"
                     sleep 2
-                    mm-delay ${delay} mm-loss uplink ${up_pkt_loss} mm-loss downlink ${down_pkt_loss} \
-                        mm-link ${UP_LINK_SPEED_FILE} ${TRACE_DIR}/${trace_file} -- \
-                        bash -c "python -m pensieve.virtual_browser.virtual_browser \
-                                        --ip \${MAHIMAHI_BASE} \
-                                        --port 8000 \
-                                        --abr RobustMPC \
-                                        --video-size-file-dir ${VIDEO_SIZE_DIR} \
-                                        --summary-dir pensieve/tests/mpc_${buf_th}_${delay}_${up_pkt_loss}_${down_pkt_loss} \
-                                        --trace-file ${trace_file}"
+  #                  mm-delay ${delay} mm-loss uplink ${up_pkt_loss} mm-loss downlink ${down_pkt_loss} \
+   #                     mm-link ${UP_LINK_SPEED_FILE} ${TRACE_DIR}/${trace_file} -- \
+                      #  bash -c "python -m pensieve.virtual_browser.virtual_browser \
+                       #                 --ip \${MAHIMAHI_BASE} \
+                        #                --port 8000 \
+                         #               --abr RobustMPC \
+                          #              --video-size-file-dir ${VIDEO_SIZE_DIR} \
+                           #             --summary-dir pensieve/tests/mpc_${buf_th}_${delay}_${up_pkt_loss}_${down_pkt_loss} \
+                            #            --trace-file ${trace_file}"
                 done
             done
         done
