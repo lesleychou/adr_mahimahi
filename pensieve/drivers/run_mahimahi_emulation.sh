@@ -29,25 +29,21 @@ trap "pkill -f abr_server" EXIT
 # trap "pkill -f abr_server && pkill -f 'python -m http.server'" SIGINT
 # trap "pkill -f abr_server && pkill -f 'python -m http.server'" EXIT
 
-
+delay=5
+up_pkt_loss=0
+down_pkt_loss=0
+buf_th=60
 trace_files=`ls ${TRACE_DIR}`
-for buf_th in $(jq -r -c '.buffer_threshold.values[]' ${CONFIG_FILE}); do
-    for delay in $(jq -r -c '.delay.values[]' ${CONFIG_FILE}); do
-        for up_pkt_loss in $(jq -r -c '.uplink_packet_loss_rate.values[]' ${CONFIG_FILE}); do
-            for down_pkt_loss in $(jq -r -c '.downlink_packet_loss_rate.values[]' ${CONFIG_FILE}); do
+#for buf_th in $(jq -r -c '.buffer_threshold.values[]' ${CONFIG_FILE}); do
+ #   for delay in $(jq -r -c '.delay.values[]' ${CONFIG_FILE}); do
+  #      for up_pkt_loss in $(jq -r -c '.uplink_packet_loss_rate.values[]' ${CONFIG_FILE}); do
+   #         for down_pkt_loss in $(jq -r -c '.downlink_packet_loss_rate.values[]' ${CONFIG_FILE}); do
                 for trace_file in ${trace_files} ; do
-
+		    trace_file=${UP_LINK_SPEED_FILE}
                     # echo "${buffer_threshold} ${delay} ${up_pkt_loss} ${down_pkt_loss} ${TRACE_FILE}"
-#                    mm-delay ${delay} mm-loss uplink ${up_pkt_loss} mm-loss downlink ${down_pkt_loss} \
- #                       mm-link ${UP_LINK_SPEED_FILE} ${TRACE_DIR}/${trace_file} -- \
-                        bash -c "python -m pensieve.virtual_browser.virtual_browser \
-                                        --ip=localhost \
-                                        --port 8000 \
-                                        --abr RL \
-                                        --video-size-file-dir ${VIDEO_SIZE_DIR} \
-                                        --summary-dir pensieve/tests/RL_${buf_th}_${delay}_${up_pkt_loss}_${down_pkt_loss} \
-                                        --trace-file ${trace_file} \
-                                        --actor-path ${ACTOR_PATH}"
+                      mm-delay ${delay} mm-loss uplink ${up_pkt_loss} mm-loss downlink ${down_pkt_loss} \
+                      mm-link ${UP_LINK_SPEED_FILE} ${UP_LINK_SPEED_FILE} -- \
+                      bash -c "python -m pensieve.virtual_browser.virtual_browser --ip \${MAHIMAHI_BASE} --port 8000 --abr RobustMPC --video-size-file-dir ${VIDEO_SIZE_DIR} --summary-dir pensieve/tests/RL_${buf_th}_${delay}_${up_pkt_loss}_${down_pkt_loss} --trace-file ${trace_file} --actor-path ${ACTOR_PATH} --abr-server-port=8322"
                     sleep 2
   #                  mm-delay ${delay} mm-loss uplink ${up_pkt_loss} mm-loss downlink ${down_pkt_loss} \
    #                     mm-link ${UP_LINK_SPEED_FILE} ${TRACE_DIR}/${trace_file} -- \
@@ -58,10 +54,10 @@ for buf_th in $(jq -r -c '.buffer_threshold.values[]' ${CONFIG_FILE}); do
                           #              --video-size-file-dir ${VIDEO_SIZE_DIR} \
                            #             --summary-dir pensieve/tests/mpc_${buf_th}_${delay}_${up_pkt_loss}_${down_pkt_loss} \
                             #            --trace-file ${trace_file}"
-                done
-            done
-        done
-    done
+#                done
+ #           done
+  #      done
+  #  done
 done
         # pkill -f "python -m http.server"
 

@@ -163,7 +163,7 @@ def main():
             os.path.dirname(os.path.abspath(__file__)),
             'abr_browser_dir/chrome_data_dir')
         # chrome_user_dir = '/tmp/chrome_user_dir_id_' + process_id
-        chrome_user_dir = '/tmp/chrome_user_dir'  # + process_id
+        chrome_user_dir = '/tmp/lesley_chrome_user_dir'  # + process_id
         os.system('rm -r ' + chrome_user_dir)
         os.system('cp -r ' + default_chrome_user_dir + ' ' + chrome_user_dir)
 
@@ -183,7 +183,7 @@ def main():
         options.add_argument('--ignore-certificate-errors')
         desired_caps = DesiredCapabilities.CHROME
         desired_caps['goog:loggingPrefs'] = {'browser': 'ALL'}
-
+        import pdb; pdb.set_trace()
         driver = webdriver.Chrome(chrome_driver, options=options,
                                   desired_capabilities=desired_caps)
 
