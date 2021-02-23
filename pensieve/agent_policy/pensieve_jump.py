@@ -43,11 +43,6 @@ class Pensieve():
         self.num_agents = num_agents
 
 
-        self.net = ActorNetwork( sess ,
-                                  state_dim=[S_INFO ,6] ,action_dim=3 ,
-                                  bitrate_dim=6
-                                  )
-
         sess.run( tf.global_variables_initializer() )
         saver = tf.train.Saver()  # save neural net parameters
 
@@ -126,9 +121,12 @@ class Pensieve():
         # print(bit_rate)
         return bit_rate
 
-    def select_action(self, state, last_bit_rate):
-        # bit_rate, action_prob_vec = self.net.select_action(state)
-        action_prob = self.net.predict( np.reshape( state ,(1 ,S_INFO ,8) ) )
+    def select_action(self, sess, state, last_bit_rate):
+        net = ActorNetwork( sess ,
+                                 state_dim=[S_INFO ,6] ,action_dim=3 ,
+                                 bitrate_dim=6
+                                 )
+        action_prob = net.predict( np.reshape( state ,(1 ,S_INFO ,8) ) )
         action_cumsum = np.cumsum( action_prob )
         selection = (action_cumsum > np.random.randint(
             1 ,RAND_RANGE ) / float( RAND_RANGE )).argmax()
