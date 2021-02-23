@@ -35,26 +35,26 @@ class Pensieve():
             randomization.
     """
 
-    def __init__(self, num_agents, log_dir, actor_path=None,
+    def __init__(self, sess, num_agents, log_dir, actor_path=None,
                  critic_path=None, model_save_interval=100, batch_size=100,
                  randomization='', randomization_interval=1):
         # https://github.com/pytorch/pytorch/issues/3966
         # mp.set_start_method("spawn")
         self.num_agents = num_agents
 
-        with tf.Session() as sess:
-            self.net = ActorNetwork( sess ,
-                                      state_dim=[S_INFO ,6] ,action_dim=3 ,
-                                      bitrate_dim=6
-                                      )
 
-            sess.run( tf.global_variables_initializer() )
-            saver = tf.train.Saver()  # save neural net parameters
+        self.net = ActorNetwork( sess ,
+                                  state_dim=[S_INFO ,6] ,action_dim=3 ,
+                                  bitrate_dim=6
+                                  )
 
-            # restore neural net parameters
-            if actor_path is not None:  # NN_MODEL is the path to file
-                saver.restore( sess,actor_path )
-                #print( "Testing model restored." )
+        sess.run( tf.global_variables_initializer() )
+        saver = tf.train.Saver()  # save neural net parameters
+
+        # restore neural net parameters
+        if actor_path is not None:  # NN_MODEL is the path to file
+            saver.restore( sess,actor_path )
+            #print( "Testing model restored." )
 
         # self.net = A3C(True, [S_INFO, S_LEN], A_DIM,
         #                ACTOR_LR_RATE, CRITIC_LR_RATE)
@@ -62,7 +62,7 @@ class Pensieve():
         # self.net.actor_network.share_memory()
         # self.net.critic_network.share_memory()
 
-        self.load_models(actor_path, critic_path)
+        #self.load_models(actor_path, critic_path)
 
         self.log_dir = log_dir
         os.makedirs(self.log_dir, exist_ok=True)
@@ -128,7 +128,7 @@ class Pensieve():
 
     def select_action(self, state, last_bit_rate):
         # bit_rate, action_prob_vec = self.net.select_action(state)
-        action_prob = self.net.predict( np.reshape( state ,(1 ,S_INFO ,6) ) )
+        action_prob = self.net.predict( np.reshape( state ,(1 ,S_INFO ,8) ) )
         action_cumsum = np.cumsum( action_prob )
         selection = (action_cumsum > np.random.randint(
             1 ,RAND_RANGE ) / float( RAND_RANGE )).argmax()
