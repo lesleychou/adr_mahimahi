@@ -271,8 +271,7 @@ def run_abr_server(abr, trace_file, summary_dir, actor_path,
         abr = RobustMPC()
     elif abr == 'RL':
         assert actor_path is not None, "actor-path is needed for RL abr."
-        with tf.Session() as sess:
-            abr = Pensieve(16, summary_dir, actor_path=actor_path)
+        abr = Pensieve(16, summary_dir, actor_path=actor_path)
     else:
         raise ValueError("ABR {} is not supported!".format(abr))
 
