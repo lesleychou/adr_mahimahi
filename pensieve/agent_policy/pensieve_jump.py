@@ -16,7 +16,7 @@ from pensieve.constants import (ACTOR_LR_RATE, A_DIM, CRITIC_LR_RATE,
                                 DEFAULT_QUALITY, M_IN_K, S_INFO, S_LEN,
                                 VIDEO_BIT_RATE, RAND_RANGE)
 from pensieve.utils import write_json_file
-
+ACTOR_PATH = "../data/model_example/nn_model_ep_100.ckpt"
 
 class Pensieve():
     """Pensieve Implementation.
@@ -113,16 +113,24 @@ class Pensieve():
         # print(bit_rate)
         return bit_rate
 
-    def select_action(self, sess, state, last_bit_rate):
-        net = ActorNetwork( sess ,
-                                 state_dim=[S_INFO ,6] ,action_dim=3 ,
-                                 bitrate_dim=6
-                                 )
-        action_prob = net.predict( np.reshape( state ,(1 ,S_INFO ,8) ) )
-        action_cumsum = np.cumsum( action_prob )
-        selection = (action_cumsum > np.random.randint(
-            1 ,RAND_RANGE ) / float( RAND_RANGE )).argmax()
-        bit_rate = self.calculate_from_selection( selection ,last_bit_rate )
+    def select_action(self, state, last_bit_rate):
+        with tf.Session() as sess:
+            sess.run( tf.global_variables_initializer() )
+            saver = tf.train.Saver()  # save neural net parameters
+
+            # restore neural net parameters
+            #if args.actor_path is not None:  # NN_MODEL is the path to file
+            saver.restore( sess ,ACTOR_PATH )
+                # print( "Testing model restored." )
+            net = ActorNetwork( sess ,
+                                     state_dim=[S_INFO ,6] ,action_dim=3 ,
+                                     bitrate_dim=6
+                                     )
+            action_prob = net.predict( np.reshape( state ,(1 ,S_INFO ,8) ) )
+            action_cumsum = np.cumsum( action_prob )
+            selection = (action_cumsum > np.random.randint(
+                1 ,RAND_RANGE ) / float( RAND_RANGE )).argmax()
+            bit_rate = self.calculate_from_selection( selection ,last_bit_rate )
 
         return bit_rate
 
