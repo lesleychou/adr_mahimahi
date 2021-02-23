@@ -183,7 +183,7 @@ def main():
         options.add_argument('--ignore-certificate-errors')
         desired_caps = DesiredCapabilities.CHROME
         desired_caps['goog:loggingPrefs'] = {'browser': 'ALL'}
-        import pdb; pdb.set_trace()
+        #import pdb; pdb.set_trace()
         driver = webdriver.Chrome(chrome_driver, options=options,
                                   desired_capabilities=desired_caps)
 
