@@ -16,7 +16,6 @@ from pensieve.constants import (ACTOR_LR_RATE, A_DIM, CRITIC_LR_RATE,
                                 DEFAULT_QUALITY, M_IN_K, S_INFO, S_LEN,
                                 VIDEO_BIT_RATE, RAND_RANGE)
 from pensieve.utils import write_json_file
-ACTOR_PATH = "pensieve/data/model_example/nn_model_ep_100.ckpt"
 
 class Pensieve():
     """Pensieve Implementation.
