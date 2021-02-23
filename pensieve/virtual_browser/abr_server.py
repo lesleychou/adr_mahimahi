@@ -62,6 +62,7 @@ def make_request_handler(server_states):
             self.abr = server_states['abr']
             self.video_size = server_states['video_size']
             self.log_writer = server_states['log_writer']
+            self.last_bit_rate = 0  #default
 
             BaseHTTPRequestHandler.__init__(self, *args, **kwargs)
 
@@ -191,8 +192,8 @@ def make_request_handler(server_states):
                      self.server_states['future_bandwidth']])
                 if isinstance(self.abr, Pensieve):
                     bit_rate, _ = self.abr.select_action(
-                        self.server_states['state'])
-                    bit_rate = bit_rate.item()
+                        self.server_states['state'], last_bit_rate=self.last_bit_rate)
+                    #bit_rate = bit_rate.item()
                 elif isinstance(self.abr, RobustMPC):
                     last_index = int(post_data['lastRequest'])
                     future_chunk_cnt = min(self.abr.mpc_future_chunk_cnt,
@@ -218,6 +219,7 @@ def make_request_handler(server_states):
                 # single state and batch states
 
                 # send data to html side
+                self.last_bit_rate = bit_rate
                 send_data = str(bit_rate)
 
                 end_of_video = post_data['lastRequest'] == TOTAL_VIDEO_CHUNK

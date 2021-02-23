@@ -3,7 +3,7 @@ set -e
 
 VIDEO_SIZE_DIR=pensieve/data/video_sizes
 # ACTOR_PATH=${ROOT}/results/7_dims_rand_large_range_correct_rebuf_penalty/even_udr_1_rand_interval/actor_ep_50000.pth
-ACTOR_PATH=pensieve/data/model_example/actor_ep_600.pth
+ACTOR_PATH=pensieve/data/model_example/nn_model_ep_6800.ckpt
 UP_LINK_SPEED_FILE=pensieve/data/12mbps
 TRACE_DIR=pensieve/data/traces
 CONFIG_FILE=pensieve/config/emulation/param_sweep.json
