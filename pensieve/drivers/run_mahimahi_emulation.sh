@@ -3,7 +3,7 @@ set -e
 
 VIDEO_SIZE_DIR=pensieve/data/video_sizes
 # ACTOR_PATH=${ROOT}/results/7_dims_rand_large_range_correct_rebuf_penalty/even_udr_1_rand_interval/actor_ep_50000.pth
-ACTOR_PATH=pensieve/data/model_example/nn_model_ep_6800.ckpt
+ACTOR_PATH=pensieve/data/model_example/nn_model_ep_100.ckpt
 UP_LINK_SPEED_FILE=pensieve/data/12mbps
 TRACE_DIR=pensieve/data/traces
 CONFIG_FILE=pensieve/config/emulation/param_sweep.json
@@ -39,7 +39,7 @@ trace_files=`ls ${TRACE_DIR}`
   #      for up_pkt_loss in $(jq -r -c '.uplink_packet_loss_rate.values[]' ${CONFIG_FILE}); do
    #         for down_pkt_loss in $(jq -r -c '.downlink_packet_loss_rate.values[]' ${CONFIG_FILE}); do
                 for trace_file in ${trace_files} ; do
-		    trace_file=${UP_LINK_SPEED_FILE}
+		                # trace_file=${UP_LINK_SPEED_FILE}
                     # echo "${buffer_threshold} ${delay} ${up_pkt_loss} ${down_pkt_loss} ${TRACE_FILE}"
                       mm-delay ${delay} mm-loss uplink ${up_pkt_loss} mm-loss downlink ${down_pkt_loss} \
                       mm-link ${UP_LINK_SPEED_FILE} ${UP_LINK_SPEED_FILE} -- \
