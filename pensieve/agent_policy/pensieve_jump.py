@@ -131,7 +131,7 @@ class Pensieve():
             selection = (action_cumsum > np.random.randint(
                 1 ,RAND_RANGE ) / float( RAND_RANGE )).argmax()
             bit_rate = self.calculate_from_selection( selection ,last_bit_rate )
-
+            sess.close()
         return bit_rate
 
     def evaluate(self, net_env, save_dir=None):
