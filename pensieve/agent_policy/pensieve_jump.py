@@ -35,7 +35,7 @@ class Pensieve():
             randomization.
     """
 
-    def __init__(self, num_agents, log_dir, actor_path=None,
+    def __init__(self, num_agents, log_dir, actor=None,
                  critic_path=None, model_save_interval=100, batch_size=100,
                  randomization='', randomization_interval=1):
         # https://github.com/pytorch/pytorch/issues/3966
@@ -43,8 +43,7 @@ class Pensieve():
         self.num_agents = num_agents
 
 
-        # self.net = A3C(True, [S_INFO, S_LEN], A_DIM,
-        #                ACTOR_LR_RATE, CRITIC_LR_RATE)
+        self.net = actor
         # NOTE: this is required for the ``fork`` method to work
         # self.net.actor_network.share_memory()
         # self.net.critic_network.share_memory()
@@ -114,24 +113,12 @@ class Pensieve():
         return bit_rate
 
     def select_action(self, state, last_bit_rate):
-        with tf.Session() as sess:
-            sess.run( tf.global_variables_initializer() )
-            saver = tf.train.Saver()  # save neural net parameters
 
-            # restore neural net parameters
-            #if args.actor_path is not None:  # NN_MODEL is the path to file
-            saver.restore( sess ,ACTOR_PATH )
-                # print( "Testing model restored." )
-            net = ActorNetwork( sess ,
-                                     state_dim=[6 ,6] ,action_dim=3 ,
-                                     bitrate_dim=6
-                                     )
-            action_prob = net.predict( np.reshape( state ,(1 ,6 ,6) ) )
-            action_cumsum = np.cumsum( action_prob )
-            selection = (action_cumsum > np.random.randint(
-                1 ,RAND_RANGE ) / float( RAND_RANGE )).argmax()
-            bit_rate = self.calculate_from_selection( selection ,last_bit_rate )
-            sess.close()
+        action_prob = self.net.predict( np.reshape( state ,(1 ,6 ,6) ) )
+        action_cumsum = np.cumsum( action_prob )
+        selection = (action_cumsum > np.random.randint(
+            1 ,RAND_RANGE ) / float( RAND_RANGE )).argmax()
+        bit_rate = self.calculate_from_selection( selection ,last_bit_rate )
         return bit_rate
 
     def evaluate(self, net_env, save_dir=None):
