@@ -10,6 +10,34 @@ from pensieve.constants import (B_IN_MB, DEFAULT_QUALITY, M_IN_K,
                                 VIDEO_CHUNK_LEN)
 from pensieve.utils import linear_reward
 
+CHUNK_COMBO_OPTIONS = np.array(
+            [combo for combo in itertools.product(
+                range(len(VIDEO_BIT_RATE)), repeat=5)])
+
+def next_possible_bitrates(br):
+    next_brs = [br - 1 ,br ,br + 1]
+    next_brs = [a for a in next_brs if 0 <= a <= 5]
+    return next_brs
+
+def calculate_jump_action_combo(br):
+    all_combos = CHUNK_COMBO_OPTIONS
+    combos = np.empty((0, 5), np.int64)
+    #combos = np.expand_dims( combos ,axis=0 )
+    for combo in all_combos:
+        br1 = combo[0]
+        if br1 in next_possible_bitrates( br ):
+            br2 = combo[1]
+            if br2 in next_possible_bitrates( br1 ):
+                br3 = combo[2]
+                if br3 in next_possible_bitrates( br2 ):
+                    br4 = combo[3]
+                    if br4 in next_possible_bitrates( br3 ):
+                        br5 = combo[4]
+                        if br5 in next_possible_bitrates( br4 ):
+                            combo = np.expand_dims( combo ,axis=0 )
+                            combos = np.append(combos, combo, axis=0)
+
+    return combos
 
 class RobustMPC(BaseAgentPolicy):
     """Naive implementation of RobustMPC."""
@@ -20,9 +48,6 @@ class RobustMPC(BaseAgentPolicy):
         # all possible combinations of 5 chunk bitrates (9^5 options)
         # iterate over list and for each, compute reward and store max
         # reward combination
-        self.chunk_combo_options = np.array(
-            [combo for combo in itertools.product(
-                range(len(VIDEO_BIT_RATE)), repeat=self.mpc_future_chunk_cnt)])
         self.bitrate_options = np.array(VIDEO_BIT_RATE)
 
         self.past_errors = []
@@ -57,9 +82,10 @@ class RobustMPC(BaseAgentPolicy):
         future_bandwidth = harmonic_bandwidth / (1 + max_error)  # robustMPC
         self.past_bandwidth_ests.append(harmonic_bandwidth)
 
+        jump_action_combos = calculate_jump_action_combo( bit_rate )
         bit_rate = predict_bitrate(
             future_chunk_cnt, buffer_size, bit_rate, last_index,
-            future_bandwidth, video_size, self.chunk_combo_options,
+            future_bandwidth, video_size, jump_action_combos,
             self.bitrate_options)
         return bit_rate, future_bandwidth
 
