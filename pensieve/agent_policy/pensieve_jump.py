@@ -35,21 +35,13 @@ class Pensieve():
             randomization.
     """
 
-    def __init__(self, sess, num_agents, log_dir, actor_path=None,
+    def __init__(self, num_agents, log_dir, actor_path=None,
                  critic_path=None, model_save_interval=100, batch_size=100,
                  randomization='', randomization_interval=1):
         # https://github.com/pytorch/pytorch/issues/3966
         # mp.set_start_method("spawn")
         self.num_agents = num_agents
 
-
-        sess.run( tf.global_variables_initializer() )
-        saver = tf.train.Saver()  # save neural net parameters
-
-        # restore neural net parameters
-        if actor_path is not None:  # NN_MODEL is the path to file
-            saver.restore( sess,actor_path )
-            #print( "Testing model restored." )
 
         # self.net = A3C(True, [S_INFO, S_LEN], A_DIM,
         #                ACTOR_LR_RATE, CRITIC_LR_RATE)

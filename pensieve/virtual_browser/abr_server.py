@@ -66,7 +66,7 @@ def make_request_handler(server_states):
 
             BaseHTTPRequestHandler.__init__(self, *args, **kwargs)
 
-        def do_POST(self):
+        def do_POST(self, args):
             content_length = int(self.headers['Content-Length'])
             post_data = json.loads(self.rfile.read(
                 content_length).decode('utf-8'))
@@ -191,8 +191,16 @@ def make_request_handler(server_states):
                      post_data['bandwidthEst'] / 1000,
                      self.server_states['future_bandwidth']])
                 if isinstance(self.abr, Pensieve):
-                    bit_rate, _ = self.abr.select_action(
-                        self.server_states['state'], last_bit_rate=self.last_bit_rate)
+                    with tf.Session() as sess:
+                        sess.run( tf.global_variables_initializer() )
+                        saver = tf.train.Saver()  # save neural net parameters
+
+                        # restore neural net parameters
+                        if args.actor_path is not None:  # NN_MODEL is the path to file
+                            saver.restore( sess ,arg.actor_path )
+                            # print( "Testing model restored." )
+                        bit_rate, _ = self.abr.select_action(sess,
+                            self.server_states['state'], last_bit_rate=self.last_bit_rate)
                     #bit_rate = bit_rate.item()
                 elif isinstance(self.abr, RobustMPC):
                     last_index = int(post_data['lastRequest'])
