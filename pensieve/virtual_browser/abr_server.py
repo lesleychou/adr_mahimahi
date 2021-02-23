@@ -195,8 +195,8 @@ def make_request_handler(server_states):
                      post_data['bandwidthEst'] / 1000,
                      self.server_states['future_bandwidth']])
                 if isinstance(self.abr, Pensieve):
-                    import pdb; pdb.set_trace()
-                    bit_rate, _ = self.abr.select_action(
+                    #import pdb; pdb.set_trace()
+                    bit_rate = self.abr.select_action(
                         self.server_states['state'], last_bit_rate=self.last_bit_rate)
                     #bit_rate = bit_rate.item()
                 elif isinstance(self.abr, RobustMPC):
