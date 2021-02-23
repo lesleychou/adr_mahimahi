@@ -5,7 +5,7 @@ VIDEO_SIZE_DIR=pensieve/data/video_sizes
 # ACTOR_PATH=${ROOT}/results/7_dims_rand_large_range_correct_rebuf_penalty/even_udr_1_rand_interval/actor_ep_50000.pth
 ACTOR_PATH=pensieve/data/model_example/nn_model_ep_25600.ckpt
 UP_LINK_SPEED_FILE=pensieve/data/12mbps
-TRACE_DIR=pensieve/data/traces
+TRACE_DIR=pensieve/data/sanity-traces
 CONFIG_FILE=pensieve/config/emulation/param_sweep.json
 
 # The architecture of emulation experiment.
@@ -29,9 +29,9 @@ trap "pkill -f abr_server" EXIT
 # trap "pkill -f abr_server && pkill -f 'python -m http.server'" SIGINT
 # trap "pkill -f abr_server && pkill -f 'python -m http.server'" EXIT
 
-delay=5
+delay=10
 up_pkt_loss=0
-down_pkt_loss=0.1
+down_pkt_loss=0.2
 buf_th=60
 trace_files=`ls ${TRACE_DIR}`
 #for buf_th in $(jq -r -c '.buffer_threshold.values[]' ${CONFIG_FILE}); do
