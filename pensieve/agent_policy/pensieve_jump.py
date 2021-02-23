@@ -113,6 +113,7 @@ class Pensieve():
         return bit_rate
 
     def select_action(self, state, last_bit_rate):
+        import pdb; pdb.set_trace()
         action_prob = self.net.predict( np.reshape( state ,(1 ,6 ,6) ) )
         action_cumsum = np.cumsum( action_prob )
         selection = (action_cumsum > np.random.randint(
