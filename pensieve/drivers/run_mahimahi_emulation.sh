@@ -5,7 +5,7 @@ VIDEO_SIZE_DIR=pensieve/data/video_sizes
 # ACTOR_PATH=${ROOT}/results/7_dims_rand_large_range_correct_rebuf_penalty/even_udr_1_rand_interval/actor_ep_50000.pth
 ACTOR_PATH=pensieve/data/model_example/nn_model_ep_25600.ckpt
 UP_LINK_SPEED_FILE=pensieve/data/12mbps
-TRACE_DIR=pensieve/data/sanity-traces
+TRACE_DIR=pensieve/data/val_FCC_mahimahi
 CONFIG_FILE=pensieve/config/emulation/param_sweep.json
 
 # The architecture of emulation experiment.
@@ -31,7 +31,7 @@ trap "pkill -f abr_server" EXIT
 
 delay=10
 up_pkt_loss=0
-down_pkt_loss=0.2
+down_pkt_loss=0.15
 buf_th=60
 trace_files=`ls ${TRACE_DIR}`
 #for buf_th in $(jq -r -c '.buffer_threshold.values[]' ${CONFIG_FILE}); do
@@ -43,8 +43,12 @@ trace_files=`ls ${TRACE_DIR}`
                     # echo "${buffer_threshold} ${delay} ${up_pkt_loss} ${down_pkt_loss} ${TRACE_FILE}"
                       mm-delay ${delay} mm-loss uplink ${up_pkt_loss} mm-loss downlink ${down_pkt_loss} \
                       mm-link ${UP_LINK_SPEED_FILE} ${UP_LINK_SPEED_FILE} -- \
+                      bash -c "python -m pensieve.virtual_browser.virtual_browser --ip \${MAHIMAHI_BASE} --port 8000 --abr RL --video-size-file-dir ${VIDEO_SIZE_DIR} --summary-dir pensieve/tests/RL_${buf_th}_${delay}_${up_pkt_loss}_${down_pkt_loss} --trace-file ${trace_file} --actor-path ${ACTOR_PATH} --abr-server-port=8322"
+
+                      mm-delay ${delay} mm-loss uplink ${up_pkt_loss} mm-loss downlink ${down_pkt_loss} \
+                      mm-link ${UP_LINK_SPEED_FILE} ${UP_LINK_SPEED_FILE} -- \
                       bash -c "python -m pensieve.virtual_browser.virtual_browser --ip \${MAHIMAHI_BASE} --port 8000 --abr RobustMPC --video-size-file-dir ${VIDEO_SIZE_DIR} --summary-dir pensieve/tests/RL_${buf_th}_${delay}_${up_pkt_loss}_${down_pkt_loss} --trace-file ${trace_file} --actor-path ${ACTOR_PATH} --abr-server-port=8322"
-                    
+
   #                  mm-delay ${delay} mm-loss uplink ${up_pkt_loss} mm-loss downlink ${down_pkt_loss} \
    #                     mm-link ${UP_LINK_SPEED_FILE} ${TRACE_DIR}/${trace_file} -- \
                       #  bash -c "python -m pensieve.virtual_browser.virtual_browser \
