@@ -197,7 +197,6 @@ def make_request_handler(server_states):
                     #import pdb; pdb.set_trace()
                     bit_rate = self.abr.select_action(
                         self.server_states['state'], last_bit_rate=self.server_states['last_bit_rate'])
-                    #bit_rate = bit_rate.item()
                 elif isinstance(self.abr, RobustMPC):
                     last_index = int(post_data['lastRequest'])
                     future_chunk_cnt = min(self.abr.mpc_future_chunk_cnt,
