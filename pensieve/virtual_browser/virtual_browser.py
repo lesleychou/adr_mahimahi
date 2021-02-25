@@ -44,7 +44,7 @@ def parse_args():
 
     # ABR related
     parser.add_argument('--abr', type=str, required=True,
-                        choices=['RobustMPC', 'RL'
+                        choices=['RobustMPC', 'RL',
                                  'Default', 'FixedRate',
                                  'BufferBased', 'RateBased', 'Festive',
                                  'Bola'], help='ABR algorithm.')
