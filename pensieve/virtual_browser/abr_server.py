@@ -35,7 +35,7 @@ def parse_args():
                         help='Optional description of the experiment.')
     # ABR related
     parser.add_argument('--abr', type=str, required=True,
-                        choices=['RobustMPC', 'RL'],
+                        choices=['RobustMPC', 'ADR', 'UDR-1', 'UDR-2', 'UDR-3'],
                         help='ABR algorithm.')
     parser.add_argument('--actor-path', type=str, default=None,
                         help='Path to RL model.')
@@ -194,7 +194,6 @@ def make_request_handler(server_states):
                      post_data['bandwidthEst'] / 1000,
                      self.server_states['future_bandwidth']])
                 if isinstance(self.abr, Pensieve):
-                    #import pdb; pdb.set_trace()
                     bit_rate = self.abr.select_action(
                         self.server_states['state'], last_bit_rate=self.server_states['last_bit_rate'])
                 elif isinstance(self.abr, RobustMPC):
@@ -287,7 +286,7 @@ def run_abr_server(abr, trace_file, summary_dir, actor_path,
 
         if abr == 'RobustMPC':
             abr = RobustMPC()
-        elif abr == 'RL':
+        elif abr == 'ADR' or abr == 'UDR-1' or abr == 'UDR-2' or abr == 'UDR-3':
             assert actor_path is not None, "actor-path is needed for RL abr."
             abr = Pensieve(16, summary_dir, actor=actor)
         else:
