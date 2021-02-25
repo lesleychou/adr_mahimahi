@@ -35,7 +35,7 @@ def parse_args():
                         help='Optional description of the experiment.')
     # ABR related
     parser.add_argument('--abr', type=str, required=True,
-                        choices=['RobustMPC', 'ADR', 'UDR-1', 'UDR-2', 'UDR-3'],
+                        choices=['RobustMPC', 'RL'],
                         help='ABR algorithm.')
     parser.add_argument('--actor-path', type=str, default=None,
                         help='Path to RL model.')
@@ -286,7 +286,7 @@ def run_abr_server(abr, trace_file, summary_dir, actor_path,
 
         if abr == 'RobustMPC':
             abr = RobustMPC()
-        elif abr == 'ADR' or abr == 'UDR-1' or abr == 'UDR-2' or abr == 'UDR-3':
+        elif abr == 'RL':
             assert actor_path is not None, "actor-path is needed for RL abr."
             abr = Pensieve(16, summary_dir, actor=actor)
         else:
