@@ -54,7 +54,7 @@ def parse_args():
     # data io related
     parser.add_argument('--summary-dir', type=str, required=True,
                         help='directory to save logs.')
-    parser.add_argument('--trace-file', type=str, required=True,
+    parser.add_argument('--trace-file', type=str, required=False,
                         help='Path to trace file.')
     parser.add_argument("--video-size-file-dir", type=str, required=True,
                         help='Dir to video size files')
@@ -167,7 +167,7 @@ def main():
         chrome_user_dir = '/tmp/lesley_chrome_user_dir'  # + process_id
         os.system('rm -r ' + chrome_user_dir)
         os.system('cp -r ' + default_chrome_user_dir + ' ' + chrome_user_dir)
-
+        #import pdb; pdb.set_trace()
         # to not display the page in browser
         display = Display(visible=False, size=(800, 600))
         display.start()

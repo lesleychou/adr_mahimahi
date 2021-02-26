@@ -207,6 +207,7 @@ def make_request_handler(server_states):
                             [self.video_size[i]
                              for i in sorted(self.video_size)]),
                         post_data['lastquality'], post_data['buffer'])
+                # elif: MPC
                     # print(self.server_states['state'], last_index,
                     #       future_chunk_cnt, bit_rate)
                 else:
