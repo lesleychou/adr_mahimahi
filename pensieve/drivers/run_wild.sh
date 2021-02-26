@@ -5,7 +5,7 @@ VIDEO_SIZE_DIR=pensieve/data/video_sizes
 # ACTOR_PATH=${ROOT}/results/7_dims_rand_large_range_correct_rebuf_penalty/even_udr_1_rand_interval/actor_ep_50000.pth
 ACTOR_PATH=pensieve/data/model_example/ADR_model/nn_model_ep_25600.ckpt
 UP_LINK_SPEED_FILE=pensieve/data/12mbps
-TRACE_DIR=pensieve/data/trace_set_1/
+TRACE_DIR=pensieve/data/wild_trace_hold/
 CONFIG_FILE=pensieve/config/emulation/param_sweep.json
 SERVER_IP="128.135.11.57"
 
@@ -44,7 +44,7 @@ trace_files=`ls ${TRACE_DIR}`
                     # echo "${buffer_threshold} ${delay} ${up_pkt_loss} ${down_pkt_loss} ${TRACE_FILE}"
 #                      mm-delay ${delay} mm-loss uplink ${up_pkt_loss} mm-loss downlink ${down_pkt_loss} \
 #                      mm-link ${UP_LINK_SPEED_FILE} ${TRACE_DIR}${trace_file} -- \
-                       bash -c "python -m pensieve.virtual_browser.virtual_browser --ip ${SERVER_IP} --port 8001 --abr RobustMPC --video-size-file-dir ${VIDEO_SIZE_DIR} --summary-dir pensieve/tests/tmp --trace-file ${trace_file} --actor-path ${ACTOR_PATH} --abr-server-port=8322"
+                       bash -c "python -m pensieve.virtual_browser.virtual_browser --ip ${SERVER_IP} --port 8001 --abr RobustMPC --video-size-file-dir ${VIDEO_SIZE_DIR} --summary-dir pensieve/tests/RMPC_new --trace-file ${trace_file} --actor-path ${ACTOR_PATH} --abr-server-port=8322"
                        break
 #                      mm-delay ${delay} mm-loss uplink ${up_pkt_loss} mm-loss downlink ${down_pkt_loss} \
 #                      mm-link ${UP_LINK_SPEED_FILE} ${TRACE_DIR}${trace_file} -- \
