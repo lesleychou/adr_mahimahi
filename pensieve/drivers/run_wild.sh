@@ -44,8 +44,8 @@ trace_files=`ls ${TRACE_DIR}`
                     # echo "${buffer_threshold} ${delay} ${up_pkt_loss} ${down_pkt_loss} ${TRACE_FILE}"
 #                      mm-delay ${delay} mm-loss uplink ${up_pkt_loss} mm-loss downlink ${down_pkt_loss} \
 #                      mm-link ${UP_LINK_SPEED_FILE} ${TRACE_DIR}${trace_file} -- \
-                      bash -c "python -m pensieve.virtual_browser.virtual_browser --ip ${SERVER_IP} --port 8001 --abr RL --video-size-file-dir ${VIDEO_SIZE_DIR} --summary-dir pensieve/tests/ADR_wild --trace-file ${trace_file} --actor-path ${ACTOR_PATH} --abr-server-port=8322"
-                      break
+                       bash -c "python -m pensieve.virtual_browser.virtual_browser --ip ${SERVER_IP} --port 8001 --abr RobustMPC --video-size-file-dir ${VIDEO_SIZE_DIR} --summary-dir pensieve/tests/tmp --trace-file ${trace_file} --actor-path ${ACTOR_PATH} --abr-server-port=8322"
+                       break
 #                      mm-delay ${delay} mm-loss uplink ${up_pkt_loss} mm-loss downlink ${down_pkt_loss} \
 #                      mm-link ${UP_LINK_SPEED_FILE} ${TRACE_DIR}${trace_file} -- \
 #                      bash -c "python -m pensieve.virtual_browser.virtual_browser --ip \${MAHIMAHI_BASE} --port 8000 --abr RobustMPC --video-size-file-dir ${VIDEO_SIZE_DIR} --summary-dir pensieve/tests/RL_${buf_th}_${delay}_${TRACE_DIR} --trace-file ${trace_file} --actor-path ${ACTOR_PATH} --abr-server-port=8322"

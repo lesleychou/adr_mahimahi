@@ -44,7 +44,7 @@ def parse_args():
 
     # ABR related
     parser.add_argument('--abr', type=str, required=True,
-                        choices=['RobustMPC', 'RL',
+                        choices=['RobustMPC', 'FastMPC', 'RL',
                                  'Default', 'FixedRate',
                                  'BufferBased', 'RateBased', 'Festive',
                                  'Bola'], help='ABR algorithm.')
@@ -131,7 +131,6 @@ def main():
     port_number = args.port
     abr_algo = args.abr
     run_time = args.run_time
-
     # start abr server here
     # prevent multiple process from being synchronized
     abr_server_proc = mp.Process(target=run_abr_server, args=(
