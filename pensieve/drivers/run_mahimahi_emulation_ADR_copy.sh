@@ -29,7 +29,7 @@ trap "pkill -f abr_server" EXIT
 # trap "pkill -f abr_server && pkill -f 'python -m http.server'" SIGINT
 # trap "pkill -f abr_server && pkill -f 'python -m http.server'" EXIT
 
-delay=10
+delay=40
 up_pkt_loss=0
 down_pkt_loss=0
 buf_th=60
