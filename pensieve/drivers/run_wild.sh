@@ -3,7 +3,11 @@ set -e
 
 VIDEO_SIZE_DIR=pensieve/data/video_sizes
 # ACTOR_PATH=${ROOT}/results/7_dims_rand_large_range_correct_rebuf_penalty/even_udr_1_rand_interval/actor_ep_50000.pth
-ACTOR_PATH=pensieve/data/model_example/ADR_model/nn_model_ep_25600.ckpt
+ACTOR_PATH_ADR=pensieve/data/model_example/ADR_model/nn_model_ep_25600.ckpt
+ACTOR_PATH_UDR_1=pensieve/data/model_example/UDR_1_model/nn_model_ep_5500.ckpt
+ACTOR_PATH_UDR_2=pensieve/data/model_example/UDR_2_model/nn_model_ep_7800.ckpt
+ACTOR_PATH_UDR_3=pensieve/data/model_example/UDR_3_model/nn_model_ep_33400.ckpt
+
 UP_LINK_SPEED_FILE=pensieve/data/12mbps
 TRACE_DIR=pensieve/data/wild_trace_hold/
 CONFIG_FILE=pensieve/config/emulation/param_sweep.json
@@ -44,8 +48,18 @@ trace_files=`ls ${TRACE_DIR}`
                     # echo "${buffer_threshold} ${delay} ${up_pkt_loss} ${down_pkt_loss} ${TRACE_FILE}"
 #                      mm-delay ${delay} mm-loss uplink ${up_pkt_loss} mm-loss downlink ${down_pkt_loss} \
 #                      mm-link ${UP_LINK_SPEED_FILE} ${TRACE_DIR}${trace_file} -- \
-                       bash -c "python -m pensieve.virtual_browser.virtual_browser --ip ${SERVER_IP} --port 8001 --abr RobustMPC --video-size-file-dir ${VIDEO_SIZE_DIR} --summary-dir pensieve/tests/RMPC_new --trace-file ${trace_file} --actor-path ${ACTOR_PATH} --abr-server-port=8322"
+                       # ADR
+                       bash -c "python -m pensieve.virtual_browser.virtual_browser --ip ${SERVER_IP} --port 8111 --abr BufferBased --video-size-file-dir ${VIDEO_SIZE_DIR} --summary-dir pensieve/tests/tmp --trace-file ${trace_file} --actor-path ${ACTOR_PATH_ADR} --abr-server-port=8335"
                        break
+                       # R-MPC
+                       bash -c "python -m pensieve.virtual_browser.virtual_browser --ip ${SERVER_IP} --port 8111 --abr RobustMPC --video-size-file-dir ${VIDEO_SIZE_DIR} --summary-dir pensieve/tests/RMPC_new --trace-file ${trace_file} --actor-path ${ACTOR_PATH_UDR_1} --abr-server-port=8322"
+                       # UDR-1
+                       bash -c "python -m pensieve.virtual_browser.virtual_browser --ip ${SERVER_IP} --port 8111 --abr RL --video-size-file-dir ${VIDEO_SIZE_DIR} --summary-dir pensieve/tests/UDR_1_new --trace-file ${trace_file} --actor-path ${ACTOR_PATH_UDR_1} --abr-server-port=8322"                       # UDR-1
+                       # UDR-2
+                       bash -c "python -m pensieve.virtual_browser.virtual_browser --ip ${SERVER_IP} --port 8111 --abr RL --video-size-file-dir ${VIDEO_SIZE_DIR} --summary-dir pensieve/tests/UDR_2_new --trace-file ${trace_file} --actor-path ${ACTOR_PATH_UDR_2} --abr-server-port=8322"
+                       # UDR-3
+                       bash -c "python -m pensieve.virtual_browser.virtual_browser --ip ${SERVER_IP} --port 8111 --abr RL --video-size-file-dir ${VIDEO_SIZE_DIR} --summary-dir pensieve/tests/UDR_3_new --trace-file ${trace_file} --actor-path ${ACTOR_PATH_UDR_3} --abr-server-port=8322"
+
 #                      mm-delay ${delay} mm-loss uplink ${up_pkt_loss} mm-loss downlink ${down_pkt_loss} \
 #                      mm-link ${UP_LINK_SPEED_FILE} ${TRACE_DIR}${trace_file} -- \
 #                      bash -c "python -m pensieve.virtual_browser.virtual_browser --ip \${MAHIMAHI_BASE} --port 8000 --abr RobustMPC --video-size-file-dir ${VIDEO_SIZE_DIR} --summary-dir pensieve/tests/RL_${buf_th}_${delay}_${TRACE_DIR} --trace-file ${trace_file} --actor-path ${ACTOR_PATH} --abr-server-port=8322"
