@@ -9,7 +9,7 @@ import time
 
 import numpy as np
 
-from pensieve.agent_policy import Pensieve, RobustMPC
+from pensieve.agent_policy import Pensieve, RobustMPC, BufferBased, FastMPC
 from pensieve.a3c.a3c_jump import ActorNetwork
 
 from pensieve.constants import (
@@ -35,7 +35,7 @@ def parse_args():
                         help='Optional description of the experiment.')
     # ABR related
     parser.add_argument('--abr', type=str, required=True,
-                        choices=['RobustMPC', 'RL'],
+                        choices=['RobustMPC', 'RL', 'BufferBased', 'FastMPC'],
                         help='ABR algorithm.')
     parser.add_argument('--actor-path', type=str, default=None,
                         help='Path to RL model.')
@@ -207,8 +207,19 @@ def make_request_handler(server_states):
                             [self.video_size[i]
                              for i in sorted(self.video_size)]),
                         post_data['lastquality'], post_data['buffer'])
-                    # print(self.server_states['state'], last_index,
-                    #       future_chunk_cnt, bit_rate)
+                elif isinstance(self.abr, BufferBased):
+                    bit_rate = self.abr.select_action(post_data['buffer'])
+                elif isinstance(self.abr, FastMPC):
+                    last_index = int( post_data['lastRequest'] )
+                    future_chunk_cnt = min( self.abr.mpc_future_chunk_cnt ,
+                                            TOTAL_VIDEO_CHUNK - last_index - 1 )
+                    bit_rate ,self.server_states['future_bandwidth'] = \
+                        self.abr.select_action(
+                            self.server_states['state'] ,last_index ,
+                            future_chunk_cnt ,np.array(
+                                [self.video_size[i]
+                                 for i in sorted( self.video_size )] ) ,
+                            post_data['lastquality'] ,post_data['buffer'] )
                 else:
                     raise TypeError("Unsupported ABR type.")
                 # action_prob = self.actor.predict(
@@ -286,9 +297,13 @@ def run_abr_server(abr, trace_file, summary_dir, actor_path,
 
         if abr == 'RobustMPC':
             abr = RobustMPC()
+        elif abr == 'FastMPC':
+            abr = FastMPC()
         elif abr == 'RL':
             assert actor_path is not None, "actor-path is needed for RL abr."
             abr = Pensieve(16, summary_dir, actor=actor)
+        elif abr == 'BufferBased':
+            abr = BufferBased()
         else:
             raise ValueError("ABR {} is not supported!".format(abr))
 
