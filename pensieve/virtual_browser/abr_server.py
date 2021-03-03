@@ -209,7 +209,7 @@ def make_request_handler(server_states):
                         post_data['lastquality'], post_data['buffer'])
                 elif isinstance(self.abr, BufferBased):
                     bit_rate = self.abr.select_action(post_data['buffer'])
-                    print(bit_rate, "------bitrate")
+                    #print(bit_rate, "------bitrate")
                 elif isinstance(self.abr, FastMPC):
                     last_index = int( post_data['lastRequest'] )
                     future_chunk_cnt = min( self.abr.mpc_future_chunk_cnt ,
