@@ -23,3 +23,8 @@ source lesvenv/bin/activate
 pip install pyvirtualdisplay selenium numba tflearn
 pip install tensorflow==1.14.0
 ```
+Enable xvfb on the client
+```
+sudo apt-get install xvfb
+```
+chromedriver
