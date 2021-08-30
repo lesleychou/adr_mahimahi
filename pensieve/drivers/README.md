@@ -1,4 +1,8 @@
 # README
+## ssh key
+```
+ssh-keygen -t rsa -b 4096
+```
 ## Client
 ### Requirements
 Downgrade python3.8 to 3.7:
