@@ -54,7 +54,7 @@ trace_files=`ls ${TRACE_DIR}`
                        # ADR
 #                       bash -c "python3 -m pensieve.virtual_browser.virtual_browser --ip ${SERVER_IP} --port 10003 --abr RL --video-size-file-dir ${VIDEO_SIZE_DIR} --summary-dir wild-test/ADR --trace-file ${trace_file} --actor-path ${ACTOR_PATH_ADR} --abr-server-port=8322"
                        # BBA
-                       bash -c "python3 -m pensieve.virtual_browser.virtual_browser --ip ${SERVER_IP} --port 10003 --abr BufferBased --video-size-file-dir ${VIDEO_SIZE_DIR} --summary-dir wild-test/BBA --trace-file ${trace_file} --abr-server-port=8322"
+                       bash -c "python3 -m pensieve.virtual_browser.virtual_browser --ip ${SERVER_IP} --port 10201 --abr BufferBased --video-size-file-dir ${VIDEO_SIZE_DIR} --summary-dir wild-test/BBA --trace-file ${trace_file} --abr-server-port=8322"
                        # FastMPC
 #                       bash -c "python3 -m pensieve.virtual_browser.virtual_browser --ip ${SERVER_IP} --port 8111 --abr FastMPC --video-size-file-dir ${VIDEO_SIZE_DIR} --summary-dir wild-test/FastMPC --trace-file ${trace_file} --actor-path ${ACTOR_PATH_ADR} --abr-server-port=8322"
                        # R-MPC
